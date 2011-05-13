@@ -80,18 +80,87 @@ class Task_Base extends Ushahidi_API_Library_Base
     	$this->json = null;
     	
     	//set the url and initialize curl
-		$url = $this->site_info->geturl();
+		$url = $this->site_info->geturl();		
 		$ch = curl_init($url);
+				
+		if(!$ch)
+		{
+			$this->json = '{"error":{"code":"1000","message":"Malformed URL"}}';
+			return $this->json;
+		}
 		//set the parameters we're sending
 		$parameters = $this->task_parameter->get_query_string();
 		
 		
-		
+		//use post
 		curl_setopt($ch, CURLOPT_POST, 1);
+    	if(($error = curl_error($ch)) != "")
+		{
+			$error_code = curl_errno($ch);
+			$this->json = '{"error":{"code":"C'.$error_code.'","message":"'.$error.'"}}';
+			return $this->json;
+		}
+		
+		//set post parameters
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $parameters);
+    	if(($error = curl_error($ch)) != "")
+		{
+			$error_code = curl_errno($ch);
+			$this->json = '{"error":{"code":"C'.$error_code.'","message":"'.$error.'"}}';
+			return $this->json;
+		}
+		
+		//set return transfer true
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    	if(($error = curl_error($ch)) != "")
+		{
+			$error_code = curl_errno($ch);
+			$this->json = '{"error":{"code":"C'.$error_code.'","message":"'.$error.'"}}';
+			return $this->json;
+		}
+		
+		// set follow location
+	    curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
+    	if(($error = curl_error($ch)) != "")
+		{
+			$error_code = curl_errno($ch);
+			$this->json = '{"error":{"code":"C'.$error_code.'","message":"'.$error.'"}}';
+			return $this->json;
+		}
+		// set auto referer
+	    curl_setopt( $ch, CURLOPT_AUTOREFERER, true );
+    	if(($error = curl_error($ch)) != "")
+		{
+			$error_code = curl_errno($ch);
+			$this->json = '{"error":{"code":"C'.$error_code.'","message":"'.$error.'"}}';
+			return $this->json;
+		}
+		//set max redirects
+	    curl_setopt( $ch, CURLOPT_MAXREDIRS, 10 );
+    	if(($error = curl_error($ch)) != "")
+		{
+			$error_code = curl_errno($ch);
+			$this->json = '{"error":{"code":"C'.$error_code.'","message":"'.$error.'"}}';
+			return $this->json;
+		}
 		
 		$this->json = curl_exec($ch);
+		
+    	if(($error = curl_error($ch)) != "")
+		{
+			$error_code = curl_errno($ch);
+			$this->json = '{"error":{"code":"C'.$error_code.'","message":"'.$error.'"}}';
+			return $this->json;
+		}
+		
+		$http_error = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		if(intval($http_error) >= 400)
+		{
+			$error_code = $http_error;
+			$this->json = '{"error":{"code":"H'.$error_code.'","message":"HTTP Error: '.$error_code.'"}}';
+			return $this->json;
+		}
+		
 		curl_close($ch);
 		return $this->json;
     }
@@ -110,6 +179,19 @@ class Task_Base extends Ushahidi_API_Library_Base
     	
     	$data_array = json_decode($this->json, true);
    
+    	if(!isset($data_array[Task_Base::$ERROR_INDEX]))
+    	{
+    		return new Task_Response_Base("U1", "Unable to parse JSON string. use getJson() on the task object to see what was returned");
+    	}
+    	if(!isset($data_array[Task_Base::$ERROR_INDEX][Task_Base::$ERROR_CODE_INDEX]))
+    	{
+    		return new Task_Response_Base("U1", "Unable to parse JSON string. use getJson() on the task object to see what was returned");
+    	}
+    	if(!isset($data_array[Task_Base::$ERROR_INDEX][Task_Base::$ERROR_MESSAGE_INDEX]))
+    	{
+    		return new Task_Response_Base("U1", "Unable to parse JSON string. use getJson() on the task object to see what was returned");
+    	}
+    	
     	
     	$response = new Task_Response_Base($data_array[Task_Base::$ERROR_INDEX][Task_Base::$ERROR_CODE_INDEX], 
     		$data_array[Task_Base::$ERROR_INDEX][Task_Base::$ERROR_MESSAGE_INDEX]);
