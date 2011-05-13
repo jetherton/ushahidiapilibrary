@@ -25,7 +25,6 @@ Requires PHP 5.3
 v0.1 - 2011/05/13 - Etherton - Started working on this plugin. At first it'll just support the report task since that's what I need right now.
 
 == TODO == 
-* gracefully handle HTTP issues
 * Figure out how to send photos
 * Figure out how to parse the media to properly find videos and news links
 * add all the other API commands
