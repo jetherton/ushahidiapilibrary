@@ -97,7 +97,7 @@ class Task_Base extends Ushahidi_API_Library_Base
     	if(($error = curl_error($ch)) != "")
 		{
 			$error_code = curl_errno($ch);
-			$this->json = '{"error":{"code":"C'.$error_code.'","message":"'.$error.'"}}';
+			$this->json = json_encode(array("error"=>array("code"=>"C".$error_code, "message"=>$error)));
 			return $this->json;
 		}
 		
@@ -106,7 +106,7 @@ class Task_Base extends Ushahidi_API_Library_Base
     	if(($error = curl_error($ch)) != "")
 		{
 			$error_code = curl_errno($ch);
-			$this->json = '{"error":{"code":"C'.$error_code.'","message":"'.$error.'"}}';
+			$this->json = json_encode(array("error"=>array("code"=>"C".$error_code, "message"=>$error)));
 			return $this->json;
 		}
 		
@@ -115,7 +115,7 @@ class Task_Base extends Ushahidi_API_Library_Base
     	if(($error = curl_error($ch)) != "")
 		{
 			$error_code = curl_errno($ch);
-			$this->json = '{"error":{"code":"C'.$error_code.'","message":"'.$error.'"}}';
+			$this->json = json_encode(array("error"=>array("code"=>"C".$error_code, "message"=>$error)));
 			return $this->json;
 		}
 		
@@ -124,7 +124,7 @@ class Task_Base extends Ushahidi_API_Library_Base
     	if(($error = curl_error($ch)) != "")
 		{
 			$error_code = curl_errno($ch);
-			$this->json = '{"error":{"code":"C'.$error_code.'","message":"'.$error.'"}}';
+			$this->json = json_encode(array("error"=>array("code"=>"C".$error_code, "message"=>$error)));
 			return $this->json;
 		}
 		// set auto referer
@@ -132,7 +132,7 @@ class Task_Base extends Ushahidi_API_Library_Base
     	if(($error = curl_error($ch)) != "")
 		{
 			$error_code = curl_errno($ch);
-			$this->json = '{"error":{"code":"C'.$error_code.'","message":"'.$error.'"}}';
+			$this->json = json_encode(array("error"=>array("code"=>"C".$error_code, "message"=>$error)));
 			return $this->json;
 		}
 		//set max redirects
@@ -140,7 +140,7 @@ class Task_Base extends Ushahidi_API_Library_Base
     	if(($error = curl_error($ch)) != "")
 		{
 			$error_code = curl_errno($ch);
-			$this->json = '{"error":{"code":"C'.$error_code.'","message":"'.$error.'"}}';
+			$this->json = json_encode(array("error"=>array("code"=>"C".$error_code, "message"=>$error)));
 			return $this->json;
 		}
 		
@@ -149,7 +149,7 @@ class Task_Base extends Ushahidi_API_Library_Base
     	if(($error = curl_error($ch)) != "")
 		{
 			$error_code = curl_errno($ch);
-			$this->json = '{"error":{"code":"C'.$error_code.'","message":"'.$error.'"}}';
+			$this->json = json_encode(array("error"=>array("code"=>"C".$error_code, "message"=>$error)));
 			return $this->json;
 		}
 		
@@ -157,7 +157,7 @@ class Task_Base extends Ushahidi_API_Library_Base
 		if(intval($http_error) >= 400)
 		{
 			$error_code = $http_error;
-			$this->json = '{"error":{"code":"H'.$error_code.'","message":"HTTP Error: '.$error_code.'"}}';
+			$this->json = json_encode(array("error"=>array("code"=>"H".$error_code, "message"=>"HTTP Error: ".$error)));
 			return $this->json;
 		}
 		

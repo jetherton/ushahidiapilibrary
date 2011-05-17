@@ -2,7 +2,7 @@
 /**
  * This class is used to encapuslate the parameters needed to execute the report task on the Ushahidi API
  *
- * @version 01 - John Etherton 2011-05-13
+ * @version 02 - John Etherton 2011-05-17
  *
  * PHP version 5.3.0
  * LICENSE: This source file is subject to LGPL license
@@ -43,7 +43,7 @@
  	//was this time am or pm
  	private $incident_ampm = null;
  	
- 	//A comma seperated list of categories that this incident was assigned to
+ 	//A comma seperated list of category IDs that this incident was assigned to
  	private $incident_category = null;
  	
  	//The latitude of the incident
@@ -69,7 +69,7 @@
  	private $person_email = null;
  	
  	//Binary data of photos that accompany this incident
- 	private $incident_photos = null;
+ 	private $incident_photo = null;
  	
  	//A news source regarding the incident/report. A news feed.
  	private $incident_news = null;
@@ -144,27 +144,57 @@
      */
  	public static function fromORM($incident)
  	{
+ 		
+ 		$category_str = "";
+ 		$i = 0;
+ 		foreach($incident->incident_category as $cat)
+ 		{
+ 			$i++;
+ 			if($i > 1)
+ 			{
+ 				$category_str .=",";
+ 			}
+ 			$category_str .= $cat->category->id;
+ 		}
+ 		
+ 		
  		$retVal =  new Report_Task_Parameter($incident->incident_title, 
  			$incident->incident_description, 
- 			$incident->incident_date, 
- 			$incident->incident_hour, 
- 			$incident->incident_minute, 
- 			$incident->incident_ampm, 
- 			$incident->incident_category, 
- 			$incident->latitude, 
- 			$incident->longitude, 
+ 			date("m/d/Y", strtotime($incident->incident_date)), 
+ 			date("h",strtotime($incident->incident_date)), 
+ 			date("i", strtotime($incident->incident_date)), 
+ 			date("a", strtotime($incident->incident_date)), 
+ 			$category_str, 
+ 			$incident->location->latitude, 
+ 			$incident->location->longitude, 
  			$incident->location->location_name);
-
- 		if(isset($incident->person->person_first))
- 		{ $retVal->setPerson_first($incident->person->person_first);}
+ 			
+ 		if(isset($incident->incident_person->person_first))
+ 		{ $retVal->setPerson_first($incident->incident_person->person_first);}
  		
- 		if(isset($incident->person->person_last))
- 		{ $retVal->setPerson_last($incident->person->person_last);}
+ 		if(isset($incident->incident_person->person_last))
+ 		{ $retVal->setPerson_last($incident->incident_person->person_last);}
  		
- 		if(isset($incident->person->person_email))
- 		{ $retVal->setPerson_email($incident->person->person_email);}
+ 		if(isset($incident->incident_person->person_email))
+ 		{ $retVal->setPerson_email($incident->incident_person->person_email);}
  		
- 		//TODO figure out how to do media
+ 		//save the media elements
+ 		foreach($incident->media as $media)
+		{
+			switch ($media->media_type)
+			{
+				case 4:
+					$retVal->addIncident_news($media->media_link);
+					break;
+				case 2:
+					$retVal->addIncident_video($media->media_link);
+					break;
+				case 1:
+					$retVal->addIncident_photo("@".\Kohana::config('upload.directory', TRUE).$media->media_link);
+					break;
+					
+			}			
+		}
  		
  		return $retVal;
  		
@@ -234,7 +264,7 @@
 	/**
 	 * Gets the photos associated with this report 
 	 */  
-	public function getIncident_photos() { return $this->incident_photos; }
+	public function getincident_photo() { return $this->incident_photo; }
 	/**
 	 * Gets the news link associated with this report 
 	 */   
@@ -275,7 +305,7 @@
 	 */ 
 	public function setincident_ampm($x) { $this->incident_ampm = $x; }
 	/**
-	 * Sets the incident category with a comma seperated string
+	 * Sets the incident category with a comma seperated string of category IDs
 	 * @param Stringe $x
 	 */ 
 	public function setIncident_category($x) { $this->incident_category = $x; }
@@ -310,21 +340,59 @@
 	 */ 
 	public function setPerson_email($x) { $this->person_email = $x; }
 	/**
-	 * Sets the incident photos
-	 * @param binary[] $x
+	 * Sets the incident photos - use an array of full file names prefixed with a "@"
+	 * @param String[] $x
 	 */ 
-	public function setIncident_photos($x) { $this->incident_photos = $x; }
+	public function setincident_photo($x) { $this->incident_photo = $x; }
+ 	/**
+	 * Lets you add a new photo file name string. Must be full filename prefixed with a "@"
+	 * This will handle the creation and manipulation of the underlying array
+	 * @param String $x
+	 */
+	public function addIncident_photo($x) 
+	{ 
+		if(!is_array($this->incident_photo))
+		{
+			$this->incident_photo = array();
+		}
+		$this->incident_photo[] = $x; 
+	}
 	/**
 	 * Sets the incident news link
-	 * @param Stringe $x
-	 */ 
-	public function setIncident_news($x) { $this->incident_news = $x; }
+	 * @param String[] $x
+	 */
+	public function setIncident_news($x)  {$this->incident_news = $x; } 
+	/**
+	 * Lets you add a new news item link as a string.
+	 * This will handle the creation and manipulation of the underlying array
+	 * @param String $x
+	 */
+	public function addIncident_news($x) 
+	{ 
+		if(!is_array($this->incident_news))
+		{
+			$this->incident_news = array();
+		}
+		$this->incident_news[] = $x; 
+	}
 	/**
 	 * Sets the incident video link
 	 * @param Stringe $x
 	 */ 
 	public function setIncident_video($x) { $this->incident_video = $x; }
-    
+ 	/**
+	 * Lets you add a new video item link as a string.
+	 * This will handle the creation and manipulation of the underlying array
+	 * @param String $x
+	 */
+	public function addIncident_video($x) 
+	{ 
+		if(!is_array($this->incident_video))
+		{
+			$this->incident_video = array();
+		}
+		$this->incident_video[] = $x; 
+	}
 
 	
 	 	
@@ -335,42 +403,68 @@
  	 */
  	public function get_query_string()
  	{
- 		$queryStr = "";
- 		$queryStr = "task=".$this->task_name;
-		$queryStr .= "&incident_title=". urlencode($this->incident_title);
-		$queryStr .= "&incident_description=". urlencode($this->incident_description);
-		$queryStr .= "&incident_date=". urlencode($this->incident_date);
-		$queryStr .= "&incident_hour=". urlencode($this->incident_hour);
-		$queryStr .= "&incident_minute=". urlencode($this->incident_minute);
-		$queryStr .= "&incident_ampm=". urlencode($this->incident_ampm);
-		$queryStr .= "&incident_category=". urlencode($this->incident_category);
-		$queryStr .= "&latitude=". urlencode($this->latitude);
-		$queryStr .= "&longitude=". urlencode($this->longitude);
-		$queryStr .= "&location_name=". urlencode($this->location_name);
-		
-		//TODO figure out how to do phtos
-		
+ 		$queryStr = array();
+ 		$queryStr["task"] = $this->task_name;
+ 		
+		$queryStr["incident_title"] = $this->incident_title;
+		$queryStr["incident_description"] = $this->incident_description;
+		$queryStr["incident_date"] = $this->incident_date;
+		$queryStr["incident_hour"] = $this->incident_hour;
+		$queryStr["incident_minute"] = $this->incident_minute;
+		$queryStr["incident_ampm"] = $this->incident_ampm;
+		$queryStr["incident_category"] = $this->incident_category;
+		$queryStr["latitude"] = $this->latitude;
+		$queryStr["longitude"] = $this->longitude;
+		$queryStr["location_name"] = $this->location_name;
+ 		
+ 		
+ 		
 		if($this->person_first != null)
 		{
-			$queryStr .= "&person_first=". urlencode($this->person_first);
+			$queryStr["person_first"] = $this->person_first;
 		}
  		if($this->person_last != null)
 		{
-			$queryStr .= "&person_last=". urlencode($this->person_last);
+			$queryStr["person_last"] = $this->person_last;
 		}
  		if($this->person_email != null)
 		{
-			$queryStr .= "&person_email=". urlencode($this->person_email);
+			$queryStr["person_email"] = $this->person_email;
 		}
- 		if($this->incident_news != null)
+		
+ 		if(is_array($this->incident_news))
+		{	
+			$i = 0;
+			foreach($this->incident_news as $news)
+			{
+				$queryStr["incident_news[$i]"] =  $news;
+				$i++;	
+			}
+			
+		}
+		
+ 		if(is_array($this->incident_video))
 		{
-			$queryStr .= "&incident_news=". urlencode($this->incident_news);
+			$i = 0;
+			foreach($this->incident_video as $video)
+			{
+				$queryStr["incident_video[$i]"] = $video;
+				$i++;	
+			}
+			
 		}
- 		if($this->incident_video != null)
+		
+ 		if(is_array($this->incident_photo))
 		{
-			$queryStr .= "&incident_video=". urlencode($this->incident_video);
+			$i = 0;
+			foreach($this->incident_photo as $photo)
+			{
+				$queryStr["incident_photo[$i]"] = $photo;
+				$i++;	
+			}
+			
 		}
-		$queryStr .= "&resp=". urlencode($this->resp);
+		
 		
 		return $queryStr;
  		

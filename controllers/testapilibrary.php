@@ -28,9 +28,19 @@ class Testapilibrary_Controller extends Controller {
 		
 		echo "<html><head><title>Ushahidi API Library Test</title></head>";
 
+		$this->testCopyFromScratch();
+		$this->testCopyExistingReport();
+		
+		
+		echo "</html>";
+	}
+	
+	
+	function testCopyFromScratch()
+	{
 		$siteInfo = new SiteInfo(url::base()."api");
 		
-		echo "<strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/><br/>";
+		echo "<h1>Create new report from Scratch</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/><br/>";
 		
 		
 		$reportParams = new ReportParam(
@@ -48,11 +58,31 @@ class Testapilibrary_Controller extends Controller {
 		$reportTask = new ReportTask($reportParams, $siteInfo);
 		$reportResponse = $reportTask->execute();
 		
-		echo "<strong>Query String:</strong> ". $reportParams->get_query_string() . "<br/><br/><br/>";
+		echo "<strong>Query String:</strong> ". Kohana::debug($reportParams->get_query_string()) . "<br/><br/><br/>";
+		
+		echo "<strong>JSON:</strong> ". $reportTask->getJson() . "<br/><br/><br/>";
+		echo "<strong>Code:</strong> ". $reportResponse->getError_code() . " <strong>Message:</strong> ". $reportResponse->getError_message();	
+	}
+	
+	
+	
+	function testCopyExistingReport()
+	{
+				$siteInfo = new SiteInfo(url::base()."api");
+		
+		echo "<br/><br/><br/><br/><h1>Copy an existing report</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/><br/>";
+		
+		
+		$report = ORM::factory('incident')->where("id", 77)->find();
+		
+		$reportParams = ReportParam::fromORM($report);
+		
+		$reportTask = new ReportTask($reportParams, $siteInfo);
+		$reportResponse = $reportTask->execute();
+		
+		echo "<strong>Query String:</strong> ". Kohana::debug($reportParams->get_query_string()) . "<br/><br/><br/>";
 		
 		echo "<strong>JSON:</strong> ". $reportTask->getJson() . "<br/><br/><br/>";
 		echo "<strong>Code:</strong> ". $reportResponse->getError_code() . " <strong>Message:</strong> ". $reportResponse->getError_message();
-		
-		echo "</html>";
 	}
 }

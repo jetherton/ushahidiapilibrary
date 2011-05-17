@@ -2,7 +2,7 @@
 name: Ushahidi API Library
 website: http://www.apps.ushahidi.com
 description: A library for using the Ushahidi API in PHP, from one Ushaihdi instance to another.
-version: 0.1
+version: 0.2
 requires: 2.0
 tested up to: 2.0
 author: John Etherton
@@ -23,9 +23,10 @@ Requires PHP 5.3
 
 == Changelog ==
 v0.1 - 2011/05/13 - Etherton - Started working on this plugin. At first it'll just support the report task since that's what I need right now.
+v0.2 - 2011/05/17 - Etherton - Added the ability to send media as part of reports. This includes photos. 
+							   Tightened up the error reporting so that it doesn't error out itself.
+							   Added testing functionality for this new functionality in testapilibrary
 
 == TODO == 
-* Figure out how to send photos
-* Figure out how to parse the media to properly find videos and news links
 * add all the other API commands
  
