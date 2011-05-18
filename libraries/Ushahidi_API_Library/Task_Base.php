@@ -35,9 +35,42 @@ class Task_Base extends Ushahidi_API_Library_Base
  	
  	//"Constants" that define the index to find stuff in the JSON. I know they aren't real constants, 
  	//but I don't want to flood the global name space
- 	public static $ERROR_INDEX = "error";
-	public static $ERROR_CODE_INDEX = "code";
-	public static $ERROR_MESSAGE_INDEX = "message";
+ 	const ERROR_INDEX = "error";
+	const ERROR_CODE_INDEX = "code";
+	const ERROR_MESSAGE_INDEX = "message";
+	const PAYLOAD_INDEX = "payload";
+	
+	const SERVICE_INDEX = "service";
+	const SERVICES_INDEX = "services";
+	const ID_INDEX = "id";
+	const API_KEY_INDEX = "apikey";
+	
+	const CATEGORIES_INDEX = "categories";
+	const CATEGORY_INDEX = "category";
+	const TITLE_INDEX = "category_title";
+	const DESCRIPTION_INDEX = "category_description";
+	const COLOR_INDEX = "category_color";
+	
+	const INCIDENTS_INDEX = "incidents";
+	const INCIDENT_INDEX = "incident";
+	const INCIDENT_ID_INDEX = "incidentid";
+	const INCIDENT_TITLE_INDEX = "incidenttitle";
+	const INCIDENT_DESCRIPTION_INDEX = "incidentdescription";
+	const INCIDENT_DATE_INDEX = "incidentdate";
+	const INCIDENT_MODE_INDEX = "incidentmode";
+	const INCIDENT_ACTIVE_INDEX = "incidentactive";
+	const INCIDENT_VERIFIED_INDEX = "incidentverified";
+	const LOCATION_ID_INDEX = "locationid";
+	const LOCATION_NAME_INDEX = "locationname";
+	const LOCATION_LATITUDE_INDEX = "locationlatitude";
+	const LOCATION_LONGITUDE_INDEX = "locationlongitude";
+	const MEDIA_INDEX = "media";
+	const TYPE_INDEX = "type";
+	const LINK_INDEX = "link";
+	const THUMB_INDEX = "thumb";
+	const LINK_URL_INDEX = "link_url";
+	const THUMB_URL_INDEX = "thumb_url";
+	
  	
  	
  	/**
@@ -157,7 +190,7 @@ class Task_Base extends Ushahidi_API_Library_Base
 		if(intval($http_error) >= 400)
 		{
 			$error_code = $http_error;
-			$this->json = json_encode(array("error"=>array("code"=>"H".$error_code, "message"=>"HTTP Error: ".$error)));
+			$this->json = json_encode(array("error"=>array("code"=>"H".$error_code, "message"=>"HTTP Error: ".$error_code)));
 			return $this->json;
 		}
 		
@@ -179,22 +212,22 @@ class Task_Base extends Ushahidi_API_Library_Base
     	
     	$data_array = json_decode($this->json, true);
    
-    	if(!isset($data_array[Task_Base::$ERROR_INDEX]))
+    	if(!isset($data_array[Task_Base::ERROR_INDEX]))
     	{
     		return new Task_Response_Base("U1", "Unable to parse JSON string. use getJson() on the task object to see what was returned");
     	}
-    	if(!isset($data_array[Task_Base::$ERROR_INDEX][Task_Base::$ERROR_CODE_INDEX]))
+    	if(!isset($data_array[Task_Base::ERROR_INDEX][Task_Base::ERROR_CODE_INDEX]))
     	{
     		return new Task_Response_Base("U1", "Unable to parse JSON string. use getJson() on the task object to see what was returned");
     	}
-    	if(!isset($data_array[Task_Base::$ERROR_INDEX][Task_Base::$ERROR_MESSAGE_INDEX]))
+    	if(!isset($data_array[Task_Base::ERROR_INDEX][Task_Base::ERROR_MESSAGE_INDEX]))
     	{
     		return new Task_Response_Base("U1", "Unable to parse JSON string. use getJson() on the task object to see what was returned");
     	}
     	
     	
-    	$response = new Task_Response_Base($data_array[Task_Base::$ERROR_INDEX][Task_Base::$ERROR_CODE_INDEX], 
-    		$data_array[Task_Base::$ERROR_INDEX][Task_Base::$ERROR_MESSAGE_INDEX]);
+    	$response = new Task_Response_Base($data_array[Task_Base::ERROR_INDEX][Task_Base::ERROR_CODE_INDEX], 
+    		$data_array[Task_Base::ERROR_INDEX][Task_Base::ERROR_MESSAGE_INDEX]);
     	
     	return $response;
     	

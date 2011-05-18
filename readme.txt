@@ -13,7 +13,7 @@ This plugin creates a new library that is used to interact with the API of other
 
 This is made for Ushahidi sites that need to interact with other Ushahidi sites in a programatic way.
 
-Requires PHP 5.3
+!!!!  REQUIRES PHP 5.3  !!!!!
 
 == Installation ==
 

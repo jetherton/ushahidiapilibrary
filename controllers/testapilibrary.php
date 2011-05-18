@@ -20,6 +20,21 @@ use Ushahidi_API_Library\Report_Task_Parameter as ReportParam;
 use Ushahidi_API_Library\Report_Task as ReportTask;
 use Ushahidi_API_Library\Report_Response as ReportResponse;
 
+use Ushahidi_API_Library\Api_Key_Task_Parameter as ApiParam;
+use Ushahidi_API_Library\Api_Key_Task as ApiTask;
+use Ushahidi_API_Library\Api_Key_Response as ApiResponse;
+
+
+use Ushahidi_API_Library\Categories_Task_Parameter as CategoriesParam;
+use Ushahidi_API_Library\Categories_Task as CategoriesTask;
+use Ushahidi_API_Library\Categories_Response as CategoriesResponse;
+
+use Ushahidi_API_Library\Incidents_Task_Parameter as IncidentsParam;
+use Ushahidi_API_Library\Incidents_Task as IncidentsTask;
+use Ushahidi_API_Library\Incidents_Response as IncidentsResponse;
+use Ushahidi_API_Library\Incidents_Bys as IncidentBys;
+
+
 class Testapilibrary_Controller extends Controller {
 	
 	
@@ -28,6 +43,10 @@ class Testapilibrary_Controller extends Controller {
 		
 		echo "<html><head><title>Ushahidi API Library Test</title></head>";
 
+		$this->testIncidentsAll();
+		$this->testCategories1();
+		$this->testCategories();		
+		$this->testApiKeys();
 		$this->testCopyFromScratch();
 		$this->testCopyExistingReport();
 		
@@ -36,7 +55,94 @@ class Testapilibrary_Controller extends Controller {
 	}
 	
 	
-	function testCopyFromScratch()
+	private function testIncidentsAll()
+	{
+		$siteInfo = new SiteInfo(url::base()."api");
+		
+		echo "<h1>Incidents, All</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/>";
+		
+		$params = new IncidentsParam();
+		$params->setBy(IncidentBys::SHOW_ALL_INCIDENTS);
+		
+		echo "<strong>Query String:</strong> ". Kohana::debug($params->get_query_string()) . "<br/><br/>";
+		
+		$task = new IncidentsTask($params, $siteInfo);
+		$response = $task->execute();
+		
+		echo "<strong>JSON:</strong> ". $task->getJson() . "<br/><br/>";
+		echo "<strong>Code:</strong> ". $response->getError_code() . " <strong>Message:</strong> ". $response->getError_message() . "<br/><br/>";
+		foreach($response->getIncidents() as $cat)
+		{
+			echo "Category Name: ". $cat->category_title. "<br/>";
+		}
+	}
+	
+	
+	
+	private function testCategories1()
+	{
+		$siteInfo = new SiteInfo(url::base()."api");
+		
+		echo "<h1>Categories By ID</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/>";
+		
+		$params = new CategoriesParam("1");
+		
+		echo "<strong>Query String:</strong> ". Kohana::debug($params->get_query_string()) . "<br/><br/>";
+		
+		$task = new CategoriesTask($params, $siteInfo);
+		$response = $task->execute();
+		
+		echo "<strong>JSON:</strong> ". $task->getJson() . "<br/><br/>";
+		echo "<strong>Code:</strong> ". $response->getError_code() . " <strong>Message:</strong> ". $response->getError_message() . "<br/><br/>";
+		foreach($response->getCategories() as $cat)
+		{
+			echo "Category Name: ". $cat->category_title. "<br/>";
+		}
+	}
+	
+	
+	
+	private function testCategories()
+	{
+		$siteInfo = new SiteInfo(url::base()."api");
+		
+		echo "<h1>Categories</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/>";
+		
+		$params = new CategoriesParam();
+		
+		$task = new CategoriesTask($params, $siteInfo);
+		$response = $task->execute();
+		
+		echo "<strong>Query String:</strong> ". Kohana::debug($params->get_query_string()) . "<br/><br/>";
+		echo "<strong>JSON:</strong> ". $task->getJson() . "<br/><br/>";
+		echo "<strong>Code:</strong> ". $response->getError_code() . " <strong>Message:</strong> ". $response->getError_message() . "<br/><br/>";
+		foreach($response->getCategories() as $cat)
+		{
+			echo "Category Name: ". $cat->category_title. "<br/>";
+		}
+	}
+	
+	
+	
+	
+	private function testApiKeys()
+	{
+		$siteInfo = new SiteInfo(url::base()."api");
+		
+		echo "<h1>API Keys</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/>";
+		
+		$params = new ApiParam("google");
+		
+		$task = new ApiTask($params, $siteInfo);
+		$response = $task->execute();
+		
+		echo "<strong>Query String:</strong> ". Kohana::debug($params->get_query_string()) . "<br/><br/>";
+		echo "<strong>JSON:</strong> ". $task->getJson() . "<br/><br/>";
+		echo "<strong>Code:</strong> ". $response->getError_code() . " <strong>Message:</strong> ". $response->getError_message() . "<br/><br/>";
+		echo "<strong>API:</strong> ". $response->getApi_key() . " <strong>ID:</strong> ". $response->getId();
+	}
+	
+	private function testCopyFromScratch()
 	{
 		$siteInfo = new SiteInfo(url::base()."api");
 		
@@ -66,14 +172,16 @@ class Testapilibrary_Controller extends Controller {
 	
 	
 	
-	function testCopyExistingReport()
+	private function testCopyExistingReport()
 	{
 				$siteInfo = new SiteInfo(url::base()."api");
 		
 		echo "<br/><br/><br/><br/><h1>Copy an existing report</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/><br/>";
 		
 		
-		$report = ORM::factory('incident')->where("id", 77)->find();
+		$report = ORM::factory('incident')->find();
+		
+		echo "<strong>Coping Report With ID:</strong> ". $report->id."<br/><br/>";  
 		
 		$reportParams = ReportParam::fromORM($report);
 		

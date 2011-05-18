@@ -41,6 +41,19 @@ class ushahidiapilibrary {
 		include Kohana::find_file("libraries/Ushahidi_API_Library", "Report_Task");
 		include Kohana::find_file("libraries/Ushahidi_API_Library", "Site_Info");
 		
+		include Kohana::find_file("libraries/Ushahidi_API_Library", "Api_Key_Task");
+		include Kohana::find_file("libraries/Ushahidi_API_Library", "Api_Key_Task_Parameter");
+		include Kohana::find_file("libraries/Ushahidi_API_Library", "Api_Key_Response");
+		
+		include Kohana::find_file("libraries/Ushahidi_API_Library", "Categories_Task");
+		include Kohana::find_file("libraries/Ushahidi_API_Library", "Categories_Task_Parameter");
+		include Kohana::find_file("libraries/Ushahidi_API_Library", "Categories_Response");
+		
+		include Kohana::find_file("libraries/Ushahidi_API_Library", "Incidents_Task");
+		include Kohana::find_file("libraries/Ushahidi_API_Library", "Incidents_Task_Parameter");
+		include Kohana::find_file("libraries/Ushahidi_API_Library", "Incidents_Response");
+		include Kohana::find_file("libraries/Ushahidi_API_Library", "Incidents_Bys");
+		
 		
 	}
 }
