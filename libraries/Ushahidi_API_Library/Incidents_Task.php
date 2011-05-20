@@ -60,11 +60,12 @@ class Incidents_Task extends Task_Base
     		(!isset($data_array[Task_Base::ERROR_INDEX][Task_Base::ERROR_MESSAGE_INDEX]))    	
     	)
     	{
-    		return new Task_Response_Base("U1", "Unable to parse JSON string. use getJson() on the task object to see what was returned");
+    		return new Incidents_Response("U1", "Unable to parse JSON string. use getJson() on the task object to see what was returned", array());
     	}
     	else if(!isset($data_array[Task_Base::PAYLOAD_INDEX][Task_Base::INCIDENTS_INDEX]))
     	{
-    		return new Task_Response_Base("U1", "Unable to parse JSON string. use getJson() on the task object to see what was returned");
+    		return new Incidents_Response("U1", "Unable to parse JSON string. use getJson() on the task object to see what was returned", array());
+    		
     	}
     	else 
     	{    		
