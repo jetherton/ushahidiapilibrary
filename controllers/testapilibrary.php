@@ -40,9 +40,9 @@ class Testapilibrary_Controller extends Controller {
 	
 	function index()
 	{
-		
+		/* This is for debugging and development only. Be sure this is commented out in production sites
 		echo "<html><head><title>Ushahidi API Library Test</title></head>";
-
+		
 		$this->testIncidentsByBounds();
 		$this->testIncidentsByCategoryName();
 		$this->testIncidentsById();
@@ -51,10 +51,11 @@ class Testapilibrary_Controller extends Controller {
 		$this->testCategories();		
 		$this->testApiKeys();
 		$this->testCopyFromScratch();
-		$this->testCopyExistingReport();
+		$this->testCopyExistingReport();		
 		
 		
 		echo "</html>";
+		*/
 	}
 	
 	
