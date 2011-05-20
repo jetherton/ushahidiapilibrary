@@ -70,6 +70,7 @@ class Task_Base extends Ushahidi_API_Library_Base
 	const THUMB_INDEX = "thumb";
 	const LINK_URL_INDEX = "link_url";
 	const THUMB_URL_INDEX = "thumb_url";
+	const LOCATION_INDEX = "location";
 	
  	
  	

@@ -43,6 +43,9 @@ class Testapilibrary_Controller extends Controller {
 		
 		echo "<html><head><title>Ushahidi API Library Test</title></head>";
 
+		$this->testIncidentsByBounds();
+		$this->testIncidentsByCategoryName();
+		$this->testIncidentsById();
 		$this->testIncidentsAll();
 		$this->testCategories1();
 		$this->testCategories();		
@@ -55,12 +58,88 @@ class Testapilibrary_Controller extends Controller {
 	}
 	
 	
+	private function testIncidentsByBounds()
+	{
+		$siteInfo = new SiteInfo(url::base()."api");
+		
+		echo "<h1>Incidents, By Bounds</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/>";
+		
+		$params = new IncidentsParam();
+		$params->setBy(IncidentBys::BY_BOUNDS);
+		$params->setNe("-8,9");
+		$params->setSw("-12,4");
+		$params->setC(1);
+		
+		
+		echo "<strong>Query String:</strong> ". Kohana::debug($params->get_query_string()) . "<br/><br/>";
+		
+		$task = new IncidentsTask($params, $siteInfo);
+		$response = $task->execute();
+		
+		echo "<strong>JSON:</strong> ". $task->getJson() . "<br/><br/>";
+		echo "<strong>Code:</strong> ". $response->getError_code() . " <strong>Message:</strong> ". $response->getError_message() . "<br/><br/>";
+		foreach($response->getIncidents() as $cat)
+		{
+			echo "Incident Title: ". $cat["incident"]->incident_title. "<br/>";
+		}
+	}
+	
+	private function testIncidentsByCategoryName()
+	{
+		$siteInfo = new SiteInfo(url::base()."api");
+		
+		echo "<h1>Incidents, By Category Name</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/>";
+		
+		$params = new IncidentsParam();
+		$params->setBy(IncidentBys::BY_CATEGORY_NAME);
+		$params->setName("Category 2");
+		
+		echo "<strong>Query String:</strong> ". Kohana::debug($params->get_query_string()) . "<br/><br/>";
+		
+		$task = new IncidentsTask($params, $siteInfo);
+		$response = $task->execute();
+		
+		echo "<strong>JSON:</strong> ". $task->getJson() . "<br/><br/>";
+		echo "<strong>Code:</strong> ". $response->getError_code() . " <strong>Message:</strong> ". $response->getError_message() . "<br/><br/>";
+		foreach($response->getIncidents() as $cat)
+		{
+			echo "Incident Title: ". $cat["incident"]->incident_title. "<br/>";
+		}
+	}
+	
+	
+	
+	
+	private function testIncidentsById()
+	{
+		$siteInfo = new SiteInfo(url::base()."api");
+		
+		echo "<h1>Incidents, By ID</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/>";
+		
+		$params = new IncidentsParam();
+		$params->setBy(IncidentBys::BY_INCIDENT_ID);
+		$params->setId(81);
+		
+		echo "<strong>Query String:</strong> ". Kohana::debug($params->get_query_string()) . "<br/><br/>";
+		
+		$task = new IncidentsTask($params, $siteInfo);
+		$response = $task->execute();
+		
+		echo "<strong>JSON:</strong> ". $task->getJson() . "<br/><br/>";
+		echo "<strong>Code:</strong> ". $response->getError_code() . " <strong>Message:</strong> ". $response->getError_message() . "<br/><br/>";
+		foreach($response->getIncidents() as $cat)
+		{
+			echo "Incident Title: ". $cat["incident"]->incident_title. "<br/>";
+		}
+	}
+	
+	
 	private function testIncidentsAll()
 	{
 		$siteInfo = new SiteInfo(url::base()."api");
 		
-		echo "<h1>Incidents, All</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/>";
 		
+		echo "<h1>Incidents, All</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/>";
 		$params = new IncidentsParam();
 		$params->setBy(IncidentBys::SHOW_ALL_INCIDENTS);
 		
@@ -73,7 +152,7 @@ class Testapilibrary_Controller extends Controller {
 		echo "<strong>Code:</strong> ". $response->getError_code() . " <strong>Message:</strong> ". $response->getError_message() . "<br/><br/>";
 		foreach($response->getIncidents() as $cat)
 		{
-			echo "Category Name: ". $cat->category_title. "<br/>";
+			echo "Incident Title: ". $cat["incident"]->incident_title. "<br/>";
 		}
 	}
 	

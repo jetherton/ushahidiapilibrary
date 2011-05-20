@@ -154,8 +154,9 @@
  	{
  		$queryStr = array();
  		$queryStr["task"] = $this->task_name;
- 		
+ 		$queryStr["resp"] = $this->resp;
  		$queryStr["by"] = $this->by;
+ 		
  		
  		switch($this->by)
  		{

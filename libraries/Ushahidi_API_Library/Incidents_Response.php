@@ -30,8 +30,9 @@ class Incidents_Response extends Task_Response_Base
 	 * 
 	 * @param String $error_code
 	 * @param String $error_message
+	 * @param Array $incidents An array of incidents with another array of the incident intself, categories, location, and any associated media
 	 */
-	public function __construct($error_code, $error_message, $categories)
+	public function __construct($error_code, $error_message, $incidents)
 	{
 		parent::__construct($error_code, $error_message);
 		

@@ -75,7 +75,7 @@ class Categories_Task extends Task_Base
     		{
 	    			$category = \ORM::Factory("category");
 	    			$category->parent_id = 0;
-	    			$category->category_trusted = 1;
+	    			$category->category_visible = 1;
 	    			$category->category_title = $cat[Task_Base::CATEGORY_INDEX][Task_Base::TITLE_INDEX];
 	    			$category->category_description = $cat[Task_Base::CATEGORY_INDEX][Task_Base::DESCRIPTION_INDEX];
 	    			$category->category_color = $cat[Task_Base::CATEGORY_INDEX][Task_Base::COLOR_INDEX];

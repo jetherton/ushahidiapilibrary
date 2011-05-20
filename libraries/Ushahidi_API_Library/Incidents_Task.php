@@ -47,6 +47,8 @@ class Incidents_Task extends Task_Base
      */
     protected function parse_json()
     {
+    	$incidents = array();
+    	
     	if($this->json == null)
     	{
     		return null;
@@ -60,30 +62,65 @@ class Incidents_Task extends Task_Base
     	{
     		return new Task_Response_Base("U1", "Unable to parse JSON string. use getJson() on the task object to see what was returned");
     	}
-    	elseif( (!isset($data_array[Task_Base::PAYLOAD_INDEX])) ||
-    		(!isset($data_array[Task_Base::PAYLOAD_INDEX][Task_Base::CATEGORIES_INDEX])) ||
-    		(!isset($data_array[Task_Base::PAYLOAD_INDEX][Task_Base::CATEGORIES_INDEX]))
-    		)
-    		{
-    			return new Task_Response_Base($data_array[Task_Base::ERROR_INDEX][Task_Base::ERROR_CODE_INDEX], 
-    				$data_array[Task_Base::ERROR_INDEX][Task_Base::ERROR_MESSAGE_INDEX]);
-    		}
-    	else 
+    	else if(!isset($data_array[Task_Base::PAYLOAD_INDEX][Task_Base::INCIDENTS_INDEX]))
     	{
-    		$categories = array();
-    		foreach($data_array[Task_Base::PAYLOAD_INDEX][Task_Base::CATEGORIES_INDEX] as $cat)
+    		return new Task_Response_Base("U1", "Unable to parse JSON string. use getJson() on the task object to see what was returned");
+    	}
+    	else 
+    	{    		
+    		foreach($data_array[Task_Base::PAYLOAD_INDEX][Task_Base::INCIDENTS_INDEX] as $inc)
     		{
-	    			$category = \ORM::Factory("category");
-	    			$category->parent_id = 0;
-	    			$category->category_trusted = 1;
-	    			$category->category_title = $cat[Task_Base::CATEGORY_INDEX][Task_Base::TITLE_INDEX];
-	    			$category->category_description = $cat[Task_Base::CATEGORY_INDEX][Task_Base::DESCRIPTION_INDEX];
-	    			$category->category_color = $cat[Task_Base::CATEGORY_INDEX][Task_Base::COLOR_INDEX];
-	    			$categories[] = $category;
+	    			$incident = \ORM::Factory("incident");
+	    			$incident->incident_title = $inc[Task_Base::INCIDENT_INDEX][Task_Base::INCIDENT_TITLE_INDEX];
+	    			$incident->incident_description = $inc[Task_Base::INCIDENT_INDEX][Task_Base::INCIDENT_DESCRIPTION_INDEX];
+	    			$incident->incident_date = $inc[Task_Base::INCIDENT_INDEX][Task_Base::INCIDENT_DATE_INDEX];
+	    			$incident->incident_mode = $inc[Task_Base::INCIDENT_INDEX][Task_Base::INCIDENT_MODE_INDEX];
+	    			$incident->incident_active = $inc[Task_Base::INCIDENT_INDEX][Task_Base::INCIDENT_ACTIVE_INDEX];
+	    			$incident->incident_verified = $inc[Task_Base::INCIDENT_INDEX][Task_Base::INCIDENT_VERIFIED_INDEX];
+	    			//handle the location
+	    			$location = \ORM::Factory("location");
+	    			$location->location_name = $inc[Task_Base::INCIDENT_INDEX][Task_Base::LOCATION_NAME_INDEX];
+	    			$location->latitude = $inc[Task_Base::INCIDENT_INDEX][Task_Base::LOCATION_LATITUDE_INDEX];
+	    			$location->longitude = $inc[Task_Base::INCIDENT_INDEX][Task_Base::LOCATION_LONGITUDE_INDEX];
+	    			
+	    			
+	    			//handle the categories
+	    			$categories = array();
+	    			if(isset($inc[Task_Base::INCIDENT_INDEX][Task_Base::CATEGORIES_INDEX]))
+	    			{
+		    			foreach($inc[Task_Base::INCIDENT_INDEX][Task_Base::CATEGORIES_INDEX] as $cat)
+		    			{
+							$category = \ORM::Factory("category");
+			    			$category->parent_id = 0;
+			    			$category->category_visible = 1;
+			    			$category->category_title = $cat[Task_Base::CATEGORY_INDEX][Task_Base::TITLE_INDEX];
+			    			$category->category_description = $cat[Task_Base::CATEGORY_INDEX][Task_Base::DESCRIPTION_INDEX];
+			    			$category->category_color = $cat[Task_Base::CATEGORY_INDEX][Task_Base::COLOR_INDEX];
+			    			$categories[] = $category;
+		    			}
+	    			}
+	    			
+	    			//hanlde media
+	    			$medias = array();
+	    			if(isset($inc[Task_Base::INCIDENT_INDEX][Task_Base::MEDIA_INDEX]))
+	    			{
+		    			foreach($inc[Task_Base::INCIDENT_INDEX][Task_Base::MEDIA_INDEX] as $med)
+		    			{
+							$media = \ORM::Factory("media");
+							$media->media_type = $med[Task_Base::TYPE_INDEX];
+							$media->meida_link = $med[Task_Base::LINK_INDEX];
+							$media->media_thumb = $med[Task_Base::THUMB_INDEX];
+			    			$medias[] = $media;
+		    			}
+	    			}
+	    			$incident_info_array =array(Task_Base::INCIDENT_INDEX=>$incident, Task_Base::CATEGORIES_INDEX=>$categories, 
+	    				Task_Base::LOCATION_INDEX=>$location, Task_Base::MEDIA_INDEX=>$medias);
+	    			$incidents[] = $incident_info_array;
+	    		
     		}
     		
-	    	$response = new Categories_Response($data_array[Task_Base::ERROR_INDEX][Task_Base::ERROR_CODE_INDEX], 
-	    		$data_array[Task_Base::ERROR_INDEX][Task_Base::ERROR_MESSAGE_INDEX], $categories);
+	    	$response = new Incidents_Response($data_array[Task_Base::ERROR_INDEX][Task_Base::ERROR_CODE_INDEX], 
+	    		$data_array[Task_Base::ERROR_INDEX][Task_Base::ERROR_MESSAGE_INDEX], $incidents);
     	}
     	
     	return $response;
