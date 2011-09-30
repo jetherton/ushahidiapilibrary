@@ -15,24 +15,6 @@
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
  */
 
-use Ushahidi_API_Library\Site_Info as SiteInfo;
-use Ushahidi_API_Library\Report_Task_Parameter as ReportParam;
-use Ushahidi_API_Library\Report_Task as ReportTask;
-use Ushahidi_API_Library\Report_Response as ReportResponse;
-
-use Ushahidi_API_Library\Api_Key_Task_Parameter as ApiParam;
-use Ushahidi_API_Library\Api_Key_Task as ApiTask;
-use Ushahidi_API_Library\Api_Key_Response as ApiResponse;
-
-
-use Ushahidi_API_Library\Categories_Task_Parameter as CategoriesParam;
-use Ushahidi_API_Library\Categories_Task as CategoriesTask;
-use Ushahidi_API_Library\Categories_Response as CategoriesResponse;
-
-use Ushahidi_API_Library\Incidents_Task_Parameter as IncidentsParam;
-use Ushahidi_API_Library\Incidents_Task as IncidentsTask;
-use Ushahidi_API_Library\Incidents_Response as IncidentsResponse;
-use Ushahidi_API_Library\Incidents_Bys as IncidentBys;
 
 
 class Testapilibrary_Controller extends Controller {
@@ -40,33 +22,31 @@ class Testapilibrary_Controller extends Controller {
 	
 	function index()
 	{
-		/* This is for debugging and development only. Be sure this is commented out in production sites
+		//This is for debugging and development only. Be sure this is commented out in production sites
 		echo "<html><head><title>Ushahidi API Library Test</title></head>";
-		
 		$this->testIncidentsByBounds();
 		$this->testIncidentsByCategoryName();
 		$this->testIncidentsById();
 		$this->testIncidentsAll();
 		$this->testCategories1();
-		$this->testCategories();		
+		$this->testCategories();
 		$this->testApiKeys();
 		$this->testCopyFromScratch();
 		$this->testCopyExistingReport();		
 		
-		
 		echo "</html>";
-		*/
+		
 	}
 	
 	
 	private function testIncidentsByBounds()
 	{
-		$siteInfo = new SiteInfo(url::base()."api");
+		$UshApiLib_Site_Info = new UshApiLib_Site_Info(url::base()."api");
 		
-		echo "<h1>Incidents, By Bounds</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/>";
+		echo "<h1>Incidents, By Bounds</h1><strong>URL:</strong> ". $UshApiLib_Site_Info->getUrl(). "<br/><br/>";
 		
-		$params = new IncidentsParam();
-		$params->setBy(IncidentBys::BY_BOUNDS);
+		$params = new UshApiLib_Incidents_Task_Parameter();
+		$params->setBy(UshApiLib_Incidents_Bys::BY_BOUNDS);
 		$params->setNe("-8,9");
 		$params->setSw("-12,4");
 		$params->setC(1);
@@ -74,7 +54,7 @@ class Testapilibrary_Controller extends Controller {
 		
 		echo "<strong>Query String:</strong> ". Kohana::debug($params->get_query_string()) . "<br/><br/>";
 		
-		$task = new IncidentsTask($params, $siteInfo);
+		$task = new UshApiLib_Incidents_Task($params, $UshApiLib_Site_Info);
 		$response = $task->execute();
 		
 		echo "<strong>JSON:</strong> ". $task->getJson() . "<br/><br/>";
@@ -87,17 +67,17 @@ class Testapilibrary_Controller extends Controller {
 	
 	private function testIncidentsByCategoryName()
 	{
-		$siteInfo = new SiteInfo(url::base()."api");
+		$UshApiLib_Site_Info = new UshApiLib_Site_Info(url::base()."api");
 		
-		echo "<h1>Incidents, By Category Name</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/>";
+		echo "<h1>Incidents, By Category Name</h1><strong>URL:</strong> ". $UshApiLib_Site_Info->getUrl(). "<br/><br/>";
 		
-		$params = new IncidentsParam();
-		$params->setBy(IncidentBys::BY_CATEGORY_NAME);
+		$params = new UshApiLib_Incidents_Task_Parameter();
+		$params->setBy(UshApiLib_Incidents_Bys::BY_CATEGORY_NAME);
 		$params->setName("Category 2");
 		
 		echo "<strong>Query String:</strong> ". Kohana::debug($params->get_query_string()) . "<br/><br/>";
 		
-		$task = new IncidentsTask($params, $siteInfo);
+		$task = new UshApiLib_Incidents_Task($params, $UshApiLib_Site_Info);
 		$response = $task->execute();
 		
 		echo "<strong>JSON:</strong> ". $task->getJson() . "<br/><br/>";
@@ -113,17 +93,17 @@ class Testapilibrary_Controller extends Controller {
 	
 	private function testIncidentsById()
 	{
-		$siteInfo = new SiteInfo(url::base()."api");
+		$UshApiLib_Site_Info = new UshApiLib_Site_Info(url::base()."api");
 		
-		echo "<h1>Incidents, By ID</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/>";
+		echo "<h1>Incidents, By ID</h1><strong>URL:</strong> ". $UshApiLib_Site_Info->getUrl(). "<br/><br/>";
 		
-		$params = new IncidentsParam();
-		$params->setBy(IncidentBys::BY_INCIDENT_ID);
+		$params = new UshApiLib_Incidents_Task_Parameter();
+		$params->setBy(UshApiLib_Incidents_Bys::BY_INCIDENT_ID);
 		$params->setId(81);
 		
 		echo "<strong>Query String:</strong> ". Kohana::debug($params->get_query_string()) . "<br/><br/>";
 		
-		$task = new IncidentsTask($params, $siteInfo);
+		$task = new UshApiLib_Incidents_Task($params, $UshApiLib_Site_Info);
 		$response = $task->execute();
 		
 		echo "<strong>JSON:</strong> ". $task->getJson() . "<br/><br/>";
@@ -137,16 +117,16 @@ class Testapilibrary_Controller extends Controller {
 	
 	private function testIncidentsAll()
 	{
-		$siteInfo = new SiteInfo(url::base()."api");
+		$UshApiLib_Site_Info = new UshApiLib_Site_Info(url::base()."api");
 		
 		
-		echo "<h1>Incidents, All</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/>";
-		$params = new IncidentsParam();
-		$params->setBy(IncidentBys::SHOW_ALL_INCIDENTS);
+		echo "<h1>Incidents, All</h1><strong>URL:</strong> ". $UshApiLib_Site_Info->getUrl(). "<br/><br/>";
+		$params = new UshApiLib_Incidents_Task_Parameter();
+		$params->setBy(UshApiLib_Incidents_Bys::SHOW_ALL_INCIDENTS);
 		
 		echo "<strong>Query String:</strong> ". Kohana::debug($params->get_query_string()) . "<br/><br/>";
 		
-		$task = new IncidentsTask($params, $siteInfo);
+		$task = new UshApiLib_Incidents_Task($params, $UshApiLib_Site_Info);
 		$response = $task->execute();
 		
 		echo "<strong>JSON:</strong> ". $task->getJson() . "<br/><br/>";
@@ -161,15 +141,15 @@ class Testapilibrary_Controller extends Controller {
 	
 	private function testCategories1()
 	{
-		$siteInfo = new SiteInfo(url::base()."api");
+		$UshApiLib_Site_Info = new UshApiLib_Site_Info(url::base()."api");
 		
-		echo "<h1>Categories By ID</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/>";
+		echo "<h1>Categories By ID</h1><strong>URL:</strong> ". $UshApiLib_Site_Info->getUrl(). "<br/><br/>";
 		
-		$params = new CategoriesParam("1");
+		$params = new UshApiLib_Categories_Task_Parameter("1");
 		
 		echo "<strong>Query String:</strong> ". Kohana::debug($params->get_query_string()) . "<br/><br/>";
 		
-		$task = new CategoriesTask($params, $siteInfo);
+		$task = new UshApiLib_Categories_Task($params, $UshApiLib_Site_Info);
 		$response = $task->execute();
 		
 		echo "<strong>JSON:</strong> ". $task->getJson() . "<br/><br/>";
@@ -184,13 +164,13 @@ class Testapilibrary_Controller extends Controller {
 	
 	private function testCategories()
 	{
-		$siteInfo = new SiteInfo(url::base()."api");
+		$UshApiLib_Site_Info = new UshApiLib_Site_Info(url::base()."api");
 		
-		echo "<h1>Categories</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/>";
+		echo "<h1>Categories</h1><strong>URL:</strong> ". $UshApiLib_Site_Info->getUrl(). "<br/><br/>";
 		
-		$params = new CategoriesParam();
+		$params = new UshApiLib_Categories_Task_Parameter();
 		
-		$task = new CategoriesTask($params, $siteInfo);
+		$task = new UshApiLib_Categories_Task($params, $UshApiLib_Site_Info);
 		$response = $task->execute();
 		
 		echo "<strong>Query String:</strong> ". Kohana::debug($params->get_query_string()) . "<br/><br/>";
@@ -207,13 +187,13 @@ class Testapilibrary_Controller extends Controller {
 	
 	private function testApiKeys()
 	{
-		$siteInfo = new SiteInfo(url::base()."api");
+		$UshApiLib_Site_Info = new UshApiLib_Site_Info(url::base()."api");
 		
-		echo "<h1>API Keys</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/>";
+		echo "<h1>API Keys</h1><strong>URL:</strong> ". $UshApiLib_Site_Info->getUrl(). "<br/><br/>";
 		
-		$params = new ApiParam("google");
+		$params = new UshApiLib_Api_Key_Task_Parameter("google");
 		
-		$task = new ApiTask($params, $siteInfo);
+		$task = new UshApiLib_Api_Key_Task($params, $UshApiLib_Site_Info);
 		$response = $task->execute();
 		
 		echo "<strong>Query String:</strong> ". Kohana::debug($params->get_query_string()) . "<br/><br/>";
@@ -224,12 +204,12 @@ class Testapilibrary_Controller extends Controller {
 	
 	private function testCopyFromScratch()
 	{
-		$siteInfo = new SiteInfo(url::base()."api");
+		$UshApiLib_Site_Info = new UshApiLib_Site_Info(url::base()."api");
 		
-		echo "<h1>Create new report from Scratch</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/><br/>";
+		echo "<h1>Create new report from Scratch</h1><strong>URL:</strong> ". $UshApiLib_Site_Info->getUrl(). "<br/><br/><br/>";
 		
 		
-		$reportParams = new ReportParam(
+		$reportParams = new UshApiLib_Report_Task_Parameter(
 			"Test report title -- ".  date('l jS \of F Y h:i:s A'),
 			"Test report description -- ".  date('l jS \of F Y h:i:s A'),
 			date("m/d/Y"),
@@ -241,7 +221,7 @@ class Testapilibrary_Controller extends Controller {
 			"-11",
 			"Liberia");
 		
-		$reportTask = new ReportTask($reportParams, $siteInfo);
+		$reportTask = new UshApiLib_Report_Task($reportParams, $UshApiLib_Site_Info);
 		$reportResponse = $reportTask->execute();
 		
 		echo "<strong>Query String:</strong> ". Kohana::debug($reportParams->get_query_string()) . "<br/><br/><br/>";
@@ -254,18 +234,18 @@ class Testapilibrary_Controller extends Controller {
 	
 	private function testCopyExistingReport()
 	{
-				$siteInfo = new SiteInfo(url::base()."api");
+				$UshApiLib_Site_Info = new UshApiLib_Site_Info(url::base()."api");
 		
-		echo "<br/><br/><br/><br/><h1>Copy an existing report</h1><strong>URL:</strong> ". $siteInfo->getUrl(). "<br/><br/><br/>";
+		echo "<br/><br/><br/><br/><h1>Copy an existing report</h1><strong>URL:</strong> ". $UshApiLib_Site_Info->getUrl(). "<br/><br/><br/>";
 		
 		
 		$report = ORM::factory('incident')->find();
 		
 		echo "<strong>Coping Report With ID:</strong> ". $report->id."<br/><br/>";  
 		
-		$reportParams = ReportParam::fromORM($report);
+		$reportParams = UshApiLib_Report_Task_Parameter::fromORM($report);
 		
-		$reportTask = new ReportTask($reportParams, $siteInfo);
+		$reportTask = new UshApiLib_Report_Task($reportParams, $UshApiLib_Site_Info);
 		$reportResponse = $reportTask->execute();
 		
 		echo "<strong>Query String:</strong> ". Kohana::debug($reportParams->get_query_string()) . "<br/><br/><br/>";

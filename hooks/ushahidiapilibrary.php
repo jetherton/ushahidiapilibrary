@@ -24,7 +24,7 @@ class ushahidiapilibrary {
 	public function __construct()
 	{	
 		// Hook into routing
-		Event::add('system.pre_controller', array($this, 'add'));
+		//Event::add('system.pre_controller', array($this, 'add'));
 	}
 	
 	/**
