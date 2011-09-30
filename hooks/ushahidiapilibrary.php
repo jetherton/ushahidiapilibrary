@@ -24,7 +24,7 @@ class ushahidiapilibrary {
 	public function __construct()
 	{	
 		// Hook into routing
-		//Event::add('system.pre_controller', array($this, 'add'));
+		Event::add('system.pre_controller', array($this, 'add'));
 	}
 	
 	/**
@@ -33,13 +33,17 @@ class ushahidiapilibrary {
 	public function add()
 	{
 		//load in that Library goodness
+		//not sure why, but I have to have this here, otherwise it won't work
+		include Kohana::find_file("libraries/", "UshApiLib_Site_Info");
+		
+		/*
 		include Kohana::find_file("libraries/Ushahidi_API_Library", "Ushahidi_API_Library_Base");
 		include Kohana::find_file("libraries/Ushahidi_API_Library", "Task_Parameter_Base");
 		include Kohana::find_file("libraries/Ushahidi_API_Library", "Task_Response_Base");
 		include Kohana::find_file("libraries/Ushahidi_API_Library", "Task_Base");		
 		include Kohana::find_file("libraries/Ushahidi_API_Library", "Report_Task_Parameter");
 		include Kohana::find_file("libraries/Ushahidi_API_Library", "Report_Task");
-		include Kohana::find_file("libraries/Ushahidi_API_Library", "Site_Info");
+		
 		
 		include Kohana::find_file("libraries/Ushahidi_API_Library", "Api_Key_Task");
 		include Kohana::find_file("libraries/Ushahidi_API_Library", "Api_Key_Task_Parameter");
@@ -53,6 +57,7 @@ class ushahidiapilibrary {
 		include Kohana::find_file("libraries/Ushahidi_API_Library", "Incidents_Task_Parameter");
 		include Kohana::find_file("libraries/Ushahidi_API_Library", "Incidents_Response");
 		include Kohana::find_file("libraries/Ushahidi_API_Library", "Incidents_Bys");
+		*/
 		
 		
 	}
