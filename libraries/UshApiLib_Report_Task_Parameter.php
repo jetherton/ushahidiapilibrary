@@ -191,7 +191,7 @@ defined('SYSPATH') or die('No direct script access allowed');
 					$retVal->addIncident_video($media->media_link);
 					break;
 				case 1:
-					$retVal->addIncident_photo("@".\Kohana::config('upload.directory', TRUE).$media->media_link);
+					$retVal->addIncident_photo("@".Kohana::config('upload.directory', TRUE).$media->media_link);
 					break;
 					
 			}			

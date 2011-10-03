@@ -34,7 +34,7 @@ class UshApiLib_Incidents_Task extends UshApiLib_Task_Base
 		//make sure task name and paramter type match
 		if($this->task_name != $task_parameter->get_task_name())
 		{
-			Throw new \Exception("Task type and task paramter type don't match. Trying create a task of type ". $this->task_name ." with a paramter of type ". $task_parameter->get_task_name()."." );
+			Throw new Exception("Task type and task paramter type don't match. Trying create a task of type ". $this->task_name ." with a paramter of type ". $task_parameter->get_task_name()."." );
 		}
 		 
     }
@@ -71,7 +71,7 @@ class UshApiLib_Incidents_Task extends UshApiLib_Task_Base
     	{    		
     		foreach($data_array[UshApiLib_Task_Base::PAYLOAD_INDEX][UshApiLib_Task_Base::INCIDENTS_INDEX] as $inc)
     		{
-	    			$incident = \ORM::Factory("incident");
+	    			$incident = ORM::Factory("incident");
 	    			$incident->incident_title = $inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::INCIDENT_TITLE_INDEX];
 	    			$incident->incident_description = $inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::INCIDENT_DESCRIPTION_INDEX];
 	    			$incident->incident_date = $inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::INCIDENT_DATE_INDEX];
@@ -79,7 +79,7 @@ class UshApiLib_Incidents_Task extends UshApiLib_Task_Base
 	    			$incident->incident_active = $inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::INCIDENT_ACTIVE_INDEX];
 	    			$incident->incident_verified = $inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::INCIDENT_VERIFIED_INDEX];
 	    			//handle the location
-	    			$location = \ORM::Factory("location");
+	    			$location = ORM::Factory("location");
 	    			$location->location_name = $inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::LOCATION_NAME_INDEX];
 	    			$location->latitude = $inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::LOCATION_LATITUDE_INDEX];
 	    			$location->longitude = $inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::LOCATION_LONGITUDE_INDEX];
@@ -91,7 +91,7 @@ class UshApiLib_Incidents_Task extends UshApiLib_Task_Base
 	    			{
 		    			foreach($inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::CATEGORIES_INDEX] as $cat)
 		    			{
-							$category = \ORM::Factory("category");
+							$category = ORM::Factory("category");
 			    			$category->parent_id = 0;
 			    			$category->category_visible = 1;
 			    			$category->category_title = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::TITLE_INDEX];
@@ -107,7 +107,7 @@ class UshApiLib_Incidents_Task extends UshApiLib_Task_Base
 	    			{
 		    			foreach($inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::MEDIA_INDEX] as $med)
 		    			{
-							$media = \ORM::Factory("media");
+							$media = ORM::Factory("media");
 							$media->media_type = $med[UshApiLib_Task_Base::TYPE_INDEX];
 							$media->meida_link = $med[UshApiLib_Task_Base::LINK_INDEX];
 							$media->media_thumb = $med[UshApiLib_Task_Base::THUMB_INDEX];
