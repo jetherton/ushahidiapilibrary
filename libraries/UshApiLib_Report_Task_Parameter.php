@@ -465,7 +465,8 @@ defined('SYSPATH') or die('No direct script access allowed');
 			}
 			
 		}
-		
+		//event to add in extra bonus material
+		Event::run('ushahidi_api_library_action.report_task_add_parameter', $queryStr);
 		
 		return $queryStr;
  		
