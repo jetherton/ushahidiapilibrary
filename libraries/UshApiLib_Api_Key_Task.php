@@ -34,7 +34,7 @@ class UshApiLib_Api_Key_Task extends UshApiLib_Task_Base
 		//make sure task name and paramter type match
 		if($this->task_name != $task_parameter->get_task_name())
 		{
-			Throw new Exception("Task type and task paramter type don't match. Trying create a task of type ". $this->task_name ." with a paramter of type ". $task_parameter->get_task_name()."." );
+			Throw new \Exception("Task type and task paramter type don't match. Trying create a task of type ". $this->task_name ." with a paramter of type ". $task_parameter->get_task_name()."." );
 		}
 		 
     }

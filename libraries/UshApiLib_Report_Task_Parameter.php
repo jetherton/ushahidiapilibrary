@@ -424,13 +424,25 @@ defined('SYSPATH') or die('No direct script access allowed');
 		{
 			$queryStr["person_first"] = $this->person_first;
 		}
+		else
+		{
+			$queryStr["person_first"] = '';
+		}
  		if($this->person_last != null)
 		{
 			$queryStr["person_last"] = $this->person_last;
 		}
+		else
+		{
+			$queryStr["person_last"] = '';
+		}
  		if($this->person_email != null)
 		{
 			$queryStr["person_email"] = $this->person_email;
+		}
+		else
+		{
+			$queryStr["person_email"] = '';
 		}
 		
  		if(is_array($this->incident_news))
@@ -465,7 +477,7 @@ defined('SYSPATH') or die('No direct script access allowed');
 			}
 			
 		}
-		//event to add in extra bonus material
+		
 		Event::run('ushahidi_api_library_action.report_task_add_parameter', $queryStr);
 		
 		return $queryStr;

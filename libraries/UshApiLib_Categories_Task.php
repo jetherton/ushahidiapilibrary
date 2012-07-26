@@ -34,7 +34,7 @@ class UshApiLib_Categories_Task extends UshApiLib_Task_Base
 		//make sure task name and paramter type match
 		if($this->task_name != $task_parameter->get_task_name())
 		{
-			Throw new Exception("Task type and task paramter type don't match. Trying create a task of type ". $this->task_name ." with a paramter of type ". $task_parameter->get_task_name()."." );
+			Throw new \Exception("Task type and task paramter type don't match. Trying create a task of type ". $this->task_name ." with a paramter of type ". $task_parameter->get_task_name()."." );
 		}
 		 
     }
@@ -73,7 +73,7 @@ class UshApiLib_Categories_Task extends UshApiLib_Task_Base
     		$categories = array();
     		foreach($data_array[UshApiLib_Task_Base::PAYLOAD_INDEX][UshApiLib_Task_Base::CATEGORIES_INDEX] as $cat)
     		{
-	    			$category = ORM::Factory("category");
+	    			$category = \ORM::Factory("category");
 	    			$category->parent_id = 0;
 	    			$category->category_visible = 1;
 	    			//accounting for annoying inconsistancies
