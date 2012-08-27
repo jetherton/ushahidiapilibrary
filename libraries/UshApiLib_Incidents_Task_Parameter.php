@@ -188,7 +188,7 @@ defined('SYSPATH') or die('No direct script access allowed');
  			$queryStr["orderfield"] = $this->orderField;
  		}
  		
- 		if($this->sort != null)
+ 		if($this->sort !== null)
  		{
  			$queryStr["sort"] = $this->sort;
  		}
