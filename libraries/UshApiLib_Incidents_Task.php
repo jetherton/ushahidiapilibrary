@@ -113,7 +113,7 @@ class UshApiLib_Incidents_Task extends UshApiLib_Task_Base
 	    			}
 	    			$incident_info_array =array(UshApiLib_Task_Base::INCIDENT_INDEX=>$incident, UshApiLib_Task_Base::CATEGORIES_INDEX=>$categories, 
 	    				UshApiLib_Task_Base::LOCATION_INDEX=>$location, UshApiLib_Task_Base::MEDIA_INDEX=>$medias);
-	    			$incidents[] = $incident_info_array;
+	    			$incidents[$inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::INCIDENT_ID_INDEX]] = $incident_info_array;
 	    		
     		}
     		
