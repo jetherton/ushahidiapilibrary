@@ -84,32 +84,29 @@ class UshApiLib_Incidents_Task extends UshApiLib_Task_Base
 	    			$location->latitude = $inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::LOCATION_LATITUDE_INDEX];
 	    			$location->longitude = $inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::LOCATION_LONGITUDE_INDEX];
 	    			
-	    			
 	    			//handle the categories
 	    			$categories = array();
-	    			if(isset($inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::CATEGORIES_INDEX]))
+	    			if(isset($inc[UshApiLib_Task_Base::CATEGORIES_INDEX]))
 	    			{
-		    			foreach($inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::CATEGORIES_INDEX] as $cat)
+		    			foreach($inc[UshApiLib_Task_Base::CATEGORIES_INDEX] as $cat)
 		    			{
 							$category = ORM::Factory("category");
 			    			$category->parent_id = 0;
 			    			$category->category_visible = 1;
 			    			$category->category_title = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::TITLE_INDEX];
-			    			$category->category_description = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::DESCRIPTION_INDEX];
-			    			$category->category_color = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::COLOR_INDEX];
 			    			$categories[] = $category;
 		    			}
 	    			}
 	    			
 	    			//hanlde media
 	    			$medias = array();
-	    			if(isset($inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::MEDIA_INDEX]))
+	    			if(isset($inc[UshApiLib_Task_Base::MEDIA_INDEX]))
 	    			{
-		    			foreach($inc[UshApiLib_Task_Base::INCIDENT_INDEX][UshApiLib_Task_Base::MEDIA_INDEX] as $med)
+		    			foreach($inc[UshApiLib_Task_Base::MEDIA_INDEX] as $med)
 		    			{
 							$media = ORM::Factory("media");
 							$media->media_type = $med[UshApiLib_Task_Base::TYPE_INDEX];
-							$media->meida_link = $med[UshApiLib_Task_Base::LINK_INDEX];
+							$media->media_link = $med[UshApiLib_Task_Base::LINK_INDEX];
 							$media->media_thumb = $med[UshApiLib_Task_Base::THUMB_INDEX];
 			    			$medias[] = $media;
 		    			}
