@@ -47,6 +47,7 @@ class UshApiLib_Task_Base extends UshApiLib_Ushahidi_API_Library_Base
 	
 	const CATEGORIES_INDEX = "categories";
 	const CATEGORY_INDEX = "category";
+	const CATEGORY_ID_INDEX = "id";
 	const TITLE_INDEX = "title";
 	const DESCRIPTION_INDEX = "description";
 	const COLOR_INDEX = "color";

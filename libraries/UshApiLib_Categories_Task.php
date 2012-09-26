@@ -129,7 +129,7 @@ class UshApiLib_Categories_Task extends UshApiLib_Task_Base
 	    			{
 	    				$category->category_position = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_INDEX. "_". UshApiLib_Task_Base::POSITION_INDEX];
 	    			}
-	    			$categories[] = $category;
+	    			$categories[$cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_ID_INDEX]] = $category;
     		}
     		
 	    	$response = new UshApiLib_Categories_Response($data_array[UshApiLib_Task_Base::ERROR_INDEX][UshApiLib_Task_Base::ERROR_CODE_INDEX], 
