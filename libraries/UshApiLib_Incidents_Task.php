@@ -104,13 +104,23 @@ class UshApiLib_Incidents_Task extends UshApiLib_Task_Base
 	    			{
 		    			foreach($inc[UshApiLib_Task_Base::MEDIA_INDEX] as $med)
 		    			{
-								$media = ORM::Factory("media");
-								$media->media_type = $med[UshApiLib_Task_Base::TYPE_INDEX];
-								$media->media_link = $med[UshApiLib_Task_Base::LINK_INDEX];
-								$media->media_thumb = $med[UshApiLib_Task_Base::THUMB_INDEX];
-								if (isset($med[UshApiLib_Task_Base::LINK_URL_INDEX])) $media->media_link = $med[UshApiLib_Task_Base::LINK_URL_INDEX];
-								if (isset($med[UshApiLib_Task_Base::THUMB_URL_INDEX])) $media->media_thumb = $med[UshApiLib_Task_Base::THUMB_URL_INDEX];
-								$medias[] = $media;
+								// If no type or link, assume we're just getting link_url and thumb_url (from older broken API)
+								if (!isset($med[UshApiLib_Task_Base::TYPE_INDEX]) AND !isset($med[UshApiLib_Task_Base::LINK_INDEX]))
+								{
+									$media = $medias[count($medias)-1];
+									if (isset($med[UshApiLib_Task_Base::LINK_URL_INDEX])) $media->media_link = $med[UshApiLib_Task_Base::LINK_URL_INDEX];
+									if (isset($med[UshApiLib_Task_Base::THUMB_URL_INDEX])) $media->media_thumb = $med[UshApiLib_Task_Base::THUMB_URL_INDEX];
+								}
+								else
+								{
+									$media = ORM::Factory("media");
+									$media->media_type = $med[UshApiLib_Task_Base::TYPE_INDEX];
+									$media->media_link = $med[UshApiLib_Task_Base::LINK_INDEX];
+									$media->media_thumb = $med[UshApiLib_Task_Base::THUMB_INDEX];
+									if (isset($med[UshApiLib_Task_Base::LINK_URL_INDEX])) $media->media_link = $med[UshApiLib_Task_Base::LINK_URL_INDEX];
+									if (isset($med[UshApiLib_Task_Base::THUMB_URL_INDEX])) $media->media_thumb = $med[UshApiLib_Task_Base::THUMB_URL_INDEX];
+									$medias[] = $media;
+								}
 		    			}
 	    			}
 	    			$incident_info_array =array(UshApiLib_Task_Base::INCIDENT_INDEX=>$incident, UshApiLib_Task_Base::CATEGORIES_INDEX=>$categories, 
