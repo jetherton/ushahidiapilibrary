@@ -74,7 +74,6 @@ class UshApiLib_Categories_Task extends UshApiLib_Task_Base
     		foreach($data_array[UshApiLib_Task_Base::PAYLOAD_INDEX][UshApiLib_Task_Base::CATEGORIES_INDEX] as $cat)
     		{
 	    			$category = \ORM::Factory("category");
-	    			$category->parent_id = 0;
 	    			$category->category_visible = 1;
 	    			//accounting for annoying inconsistancies
 	    			if(isset($cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::TITLE_INDEX]))
@@ -102,6 +101,33 @@ class UshApiLib_Categories_Task extends UshApiLib_Task_Base
 	    			elseif(isset($cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_INDEX. "_". UshApiLib_Task_Base::COLOR_INDEX]))
 	    			{
 	    				$category->category_color = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_INDEX. "_". UshApiLib_Task_Base::COLOR_INDEX];
+	    			}
+	    			
+	    			if(isset($cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::ICON_INDEX]))
+	    			{
+	    				$category->category_image = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::ICON_INDEX];
+	    			}
+	    			elseif(isset($cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_INDEX. "_". UshApiLib_Task_Base::ICON_INDEX]))
+	    			{
+	    				$category->category_image = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_INDEX. "_". UshApiLib_Task_Base::ICON_INDEX];
+	    			}
+	    			
+	    			if(isset($cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::PARENT_ID_INDEX]))
+	    			{
+	    				$category->parent_id = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::PARENT_ID_INDEX];
+	    			}
+	    			elseif(isset($cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_INDEX. "_". UshApiLib_Task_Base::PARENT_ID_INDEX]))
+	    			{
+	    				$category->parent_id = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_INDEX. "_". UshApiLib_Task_Base::PARENT_ID_INDEX];
+	    			}
+	    			
+	    			if(isset($cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::POSITION_INDEX]))
+	    			{
+	    				$category->category_position = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::POSITION_INDEX];
+	    			}
+	    			elseif(isset($cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_INDEX. "_". UshApiLib_Task_Base::POSITION_INDEX]))
+	    			{
+	    				$category->category_position = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_INDEX. "_". UshApiLib_Task_Base::POSITION_INDEX];
 	    			}
 	    			$categories[] = $category;
     		}
