@@ -58,14 +58,14 @@ class UshApiLib_Categories_Task extends UshApiLib_Task_Base
     		(!isset($data_array[UshApiLib_Task_Base::ERROR_INDEX][UshApiLib_Task_Base::ERROR_MESSAGE_INDEX]))    	
     	)
     	{
-    		return new Task_Response_Base("U1", "Unable to parse JSON string. use getJson() on the task object to see what was returned");
+    		return new UshApiLib_Task_Response_Base("U1", "Unable to parse JSON string. use getJson() on the task object to see what was returned");
     	}
     	elseif( (!isset($data_array[UshApiLib_Task_Base::PAYLOAD_INDEX])) ||
     		(!isset($data_array[UshApiLib_Task_Base::PAYLOAD_INDEX][UshApiLib_Task_Base::CATEGORIES_INDEX])) ||
     		(!isset($data_array[UshApiLib_Task_Base::PAYLOAD_INDEX][UshApiLib_Task_Base::CATEGORIES_INDEX]))
     		)
     		{
-    			return new Task_Response_Base($data_array[UshApiLib_Task_Base::ERROR_INDEX][UshApiLib_Task_Base::ERROR_CODE_INDEX], 
+    			return new UshApiLib_Task_Response_Base($data_array[UshApiLib_Task_Base::ERROR_INDEX][UshApiLib_Task_Base::ERROR_CODE_INDEX], 
     				$data_array[UshApiLib_Task_Base::ERROR_INDEX][UshApiLib_Task_Base::ERROR_MESSAGE_INDEX]);
     		}
     	else 
