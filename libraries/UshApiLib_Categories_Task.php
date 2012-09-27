@@ -58,14 +58,14 @@ class UshApiLib_Categories_Task extends UshApiLib_Task_Base
     		(!isset($data_array[UshApiLib_Task_Base::ERROR_INDEX][UshApiLib_Task_Base::ERROR_MESSAGE_INDEX]))    	
     	)
     	{
-    		return new Task_Response_Base("U1", "Unable to parse JSON string. use getJson() on the task object to see what was returned");
+    		return new UshApiLib_Task_Response_Base("U1", "Unable to parse JSON string. use getJson() on the task object to see what was returned");
     	}
     	elseif( (!isset($data_array[UshApiLib_Task_Base::PAYLOAD_INDEX])) ||
     		(!isset($data_array[UshApiLib_Task_Base::PAYLOAD_INDEX][UshApiLib_Task_Base::CATEGORIES_INDEX])) ||
     		(!isset($data_array[UshApiLib_Task_Base::PAYLOAD_INDEX][UshApiLib_Task_Base::CATEGORIES_INDEX]))
     		)
     		{
-    			return new Task_Response_Base($data_array[UshApiLib_Task_Base::ERROR_INDEX][UshApiLib_Task_Base::ERROR_CODE_INDEX], 
+    			return new UshApiLib_Task_Response_Base($data_array[UshApiLib_Task_Base::ERROR_INDEX][UshApiLib_Task_Base::ERROR_CODE_INDEX], 
     				$data_array[UshApiLib_Task_Base::ERROR_INDEX][UshApiLib_Task_Base::ERROR_MESSAGE_INDEX]);
     		}
     	else 
@@ -74,7 +74,6 @@ class UshApiLib_Categories_Task extends UshApiLib_Task_Base
     		foreach($data_array[UshApiLib_Task_Base::PAYLOAD_INDEX][UshApiLib_Task_Base::CATEGORIES_INDEX] as $cat)
     		{
 	    			$category = \ORM::Factory("category");
-	    			$category->parent_id = 0;
 	    			$category->category_visible = 1;
 	    			//accounting for annoying inconsistancies
 	    			if(isset($cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::TITLE_INDEX]))
@@ -103,7 +102,34 @@ class UshApiLib_Categories_Task extends UshApiLib_Task_Base
 	    			{
 	    				$category->category_color = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_INDEX. "_". UshApiLib_Task_Base::COLOR_INDEX];
 	    			}
-	    			$categories[] = $category;
+	    			
+	    			if(isset($cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::ICON_INDEX]))
+	    			{
+	    				$category->category_image = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::ICON_INDEX];
+	    			}
+	    			elseif(isset($cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_INDEX. "_". UshApiLib_Task_Base::ICON_INDEX]))
+	    			{
+	    				$category->category_image = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_INDEX. "_". UshApiLib_Task_Base::ICON_INDEX];
+	    			}
+	    			
+	    			if(isset($cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::PARENT_ID_INDEX]))
+	    			{
+	    				$category->parent_id = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::PARENT_ID_INDEX];
+	    			}
+	    			elseif(isset($cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_INDEX. "_". UshApiLib_Task_Base::PARENT_ID_INDEX]))
+	    			{
+	    				$category->parent_id = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_INDEX. "_". UshApiLib_Task_Base::PARENT_ID_INDEX];
+	    			}
+	    			
+	    			if(isset($cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::POSITION_INDEX]))
+	    			{
+	    				$category->category_position = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::POSITION_INDEX];
+	    			}
+	    			elseif(isset($cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_INDEX. "_". UshApiLib_Task_Base::POSITION_INDEX]))
+	    			{
+	    				$category->category_position = $cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_INDEX. "_". UshApiLib_Task_Base::POSITION_INDEX];
+	    			}
+	    			$categories[$cat[UshApiLib_Task_Base::CATEGORY_INDEX][UshApiLib_Task_Base::CATEGORY_ID_INDEX]] = $category;
     		}
     		
 	    	$response = new UshApiLib_Categories_Response($data_array[UshApiLib_Task_Base::ERROR_INDEX][UshApiLib_Task_Base::ERROR_CODE_INDEX], 

@@ -154,6 +154,9 @@ class Testapilibrary_Controller extends Controller {
 		
 		echo "<strong>JSON:</strong> ". $task->getJson() . "<br/><br/>";
 		echo "<strong>Code:</strong> ". $response->getError_code() . " <strong>Message:</strong> ". $response->getError_message() . "<br/><br/>";
+		
+		if (! $response instanceof UshApiLib_Categories_Response) return;
+		
 		foreach($response->getCategories() as $cat)
 		{
 			echo "Category Name: ". $cat->category_title. "<br/>";
@@ -199,6 +202,9 @@ class Testapilibrary_Controller extends Controller {
 		echo "<strong>Query String:</strong> ". Kohana::debug($params->get_query_string()) . "<br/><br/>";
 		echo "<strong>JSON:</strong> ". $task->getJson() . "<br/><br/>";
 		echo "<strong>Code:</strong> ". $response->getError_code() . " <strong>Message:</strong> ". $response->getError_message() . "<br/><br/>";
+		
+		if (! $response instanceof UshApiLib_Api_Key_Response) return;
+		
 		echo "<strong>API:</strong> ". $response->getApi_key() . " <strong>ID:</strong> ". $response->getId();
 	}
 	
